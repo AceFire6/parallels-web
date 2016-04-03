@@ -85,20 +85,29 @@
 
     nodeClick: function(layer) {
       if (canvasManager.selectedNodeColor === layer.data.color) {
+        var nodeBlock = $canvas.getLayer(layer.name.replace('node', 'block'));
+        if (nodeBlock.click !== undefined) {
+          canvasManager.blockClick(nodeBlock);
+        }
         layer.data.used = true;
-        canvasManager.blockClick($canvas.getLayer(layer.name.replace('node', 'block')));
-      } else {
+      } else if (!canvasManager.selectedNodeColor) { // A line is not already being drawn
         var nodeGroup = $canvas.getLayerGroup('node-' + layer.data.color);
         var completed = nodeGroup.filter(function (node) {
           return node.data.used === true;
         });
-        console.log('COMPLETED: ' + completed.length);
+
         if (completed.length === 2) {
-          var pathBlocks = $canvas.getLayerGroup('b-' + layer.data.color);
+          var pathBlocks = $canvas.getLayerGroup('blocks');
           pathBlocks.forEach(function(block) {
-            canvasManager.resetBlock(block);
+            if ($.inArray('b-' + layer.data.color, block.groups) !== -1) {
+              canvasManager.resetBlock(block);
+            }
+          });
+          nodeGroup.forEach(function(node) {
+            node.data.used = false;
           });
         }
+
         canvasManager.selectedNodeColor = layer.data.color;
         layer.data.used = true;
 
@@ -109,6 +118,7 @@
         block.data.lightColor = layer.data.lightColor;
         block.data.selected = true;
 
+        canvasManager.selectedBlock = block.name;
         canvasManager.possibleMoves = canvasManager.getPossibleMoves(block.x, block.y);
 
         canvasManager.updatePossibleMoves();
@@ -123,19 +133,32 @@
       }
       block.click = undefined;
       block.fillStyle = '#000';
+      block.mouseover = canvasManager.hoverOn;
+      block.mouseout = canvasManager.hoverOff;
       block.data.selected = false;
       block.data.color = '#000';
       var groups =['blocks', 'board'];
       if (block.data.nodeBlock) {
         groups = block.groups;
       }
-      $canvas.setLayer(block, {groups: groups});
+      block.groups = groups;
       block.data.lightColor = LightenDarkenColor('#000', 60);
+    },
+
+    setBlock: function(layer) {
+      var block = $canvas.getLayer(layer);
+      block.click = undefined;
+      block.mouseover = canvasManager.hoverOn;
+      block.mouseout = canvasManager.hoverOff;
     },
 
     blockClick: function(layer) {
       if (layer.name === canvasManager.selectedBlock) {
         return;
+      }
+
+      if (canvasManager.selectedBlock) {
+        canvasManager.setBlock(canvasManager.selectedBlock);
       }
 
       if (layer.data.selected) {
@@ -147,7 +170,7 @@
       layer.data.lightColor = LightenDarkenColor(canvasManager.selectedNodeColor, 60);
 
       layer.data.selected = true;
-      $canvas.setLayer(layer, {groups: layer.groups.concat(layer.data.color)});
+      layer.groups.push('b-' + canvasManager.selectedNodeColor);
       layer.click = undefined;
 
       canvasManager.possibleMoves.forEach(function (move) {
@@ -168,9 +191,11 @@
         var nodeName = layer.name.replace('block', 'node');
         var node = $canvas.getLayer(nodeName);
 
-        if (!node.used) {
-          node.used = true;
+        if (!node.data.used) {
+          canvasManager.setBlock(layer);
+          node.data.used = true;
           canvasManager.possibleMoves = [];
+          canvasManager.selectedBlock = '';
           canvasManager.selectedNodeColor = '';
 
           $canvas.drawLayers();
