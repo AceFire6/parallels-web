@@ -435,6 +435,7 @@
           node.data.used = false;
         });
         levelManager.currentResets += 1;
+        levelManager.completedNodeGroups = 0;
       }
 
       $canvas.drawLayers();
