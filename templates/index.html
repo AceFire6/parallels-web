@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Path Finder</title>
+    <link rel="icon" href="/static/img/path-finder-logo.png">
+
+    <!-- CSS -->
+    <link rel="stylesheet/less" type="text/css" href="/static/css/index.less" />
+    <!-- End CSS -->
+</head>
+<body>
+    <div id="content-container">
+        <header>
+            <img src="/static/img/path-finder-logo.png" />
+            <h1>Path Finder</h1>
+        </header>
+
+        <main>
+            <section id="game-container">
+                <h2 id="level-name">Level <span class="value">1</span></h2>
+                <canvas width="600" height="600" id="game-canvas">Your browser does not support HTML5.</canvas>
+                <div id="score-container">
+                    <div class="moves">Moves: <span class="value">0</span></div>
+                    <div class="time hidden">Time: <span class="value">00:00</span></div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            Made by: Jethro Muller
+        </footer>
+    </div>
+
+    <!-- Javascript -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.6.1/less.min.js"></script>
+    <script src="/static/js/vendor/jquery-2.2.2.min.js"></script>
+    <script src="/static/js/vendor/jcanvas.min.js"></script>
+    <script src="/static/js/levels.js"></script>
+    <script src="/static/js/index.js"></script>
+    <!-- End Javascript -->
+</body>
+</html>

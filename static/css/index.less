@@ -1,0 +1,108 @@
+// CONSTANTS
+@baseColor: #2976af;
+@darkBase: darken(@baseColor, 12%);
+@textColor: #ecf0f1;
+
+// FUNCTIONS
+.Block-Center(@width) {
+  width: @width;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.FloatPad(@dir, @pad) {
+  float: @dir;
+  padding-@{dir}: @pad;
+}
+
+// FONTS
+@font-face {
+  font-family: 'Monsterrat';
+  src: url('/static/fonts/Montserrat-Regular.otf');
+}
+
+// RESET
+* {
+  margin: 0;
+  padding: 0;
+  color: @textColor;
+  font-family: "Monsterrat", Arial, sans-serif;
+}
+
+// CSS
+html, body {
+  height: 100%;
+  background-color: darken(@baseColor, 25%);
+}
+
+#content-container {
+  position: relative;
+  min-height: 100%;
+  .Block-Center(60%);
+  min-width: 650px;
+  background-color: darken(@baseColor, 5%);
+
+  header {
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background-color: @darkBase;
+
+    img {
+      height: 50px;
+      vertical-align: middle;
+      border-radius: 10%;
+    }
+
+    h1 {
+      display: inline;
+      vertical-align: middle;
+      font-size: 2.5em;
+    }
+  }
+
+  main {
+    padding: 0 10px 50px 10px;
+
+    #game-container {
+      .Block-Center(600px);
+      margin-top: 2%;
+      text-align: center;
+      background-color: #000000;
+      border: 1px #FFFFFF solid;
+
+      canvas {
+        display: inline;
+      }
+
+      #score-container {
+        width: 100%;
+        height: 1.5em;
+
+
+        .moves {
+          .FloatPad(left, 5px);
+        }
+
+        .time {
+          .FloatPad(right, 5px);
+        }
+
+        .hidden {
+          display: none;
+        }
+      }
+    }
+  }
+
+  footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 25px;
+    padding-top: 7px;
+    text-align: center;
+    font-size: 12px;
+    background-color: @darkBase;
+  }
+}
