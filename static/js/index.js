@@ -52,10 +52,16 @@
 
     hoverOn: function(layer) {
       layer.fillStyle = layer.data.lightColor;
+      if (layer.name.startsWith('node-')) {
+        canvasManager.hoverOn($canvas.getLayer(layer.name.replace('node', 'block')));
+      }
     },
 
     hoverOff: function(layer) {
       layer.fillStyle = layer.data.color;
+      if (layer.name.startsWith('node-')) {
+        canvasManager.hoverOff($canvas.getLayer(layer.name.replace('node', 'block')));
+      }
     },
 
     getPossibleMoves: function(x, y) {
