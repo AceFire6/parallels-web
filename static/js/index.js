@@ -40,7 +40,7 @@
     },
 
     updateTime: function () {
-      $('#score-container').find('.time').find('.value').text(levelManager.currentTime);
+      $('#score-container').find('.time').find('.value').text(levelManager.currentElapsed);
     }
   };
 
@@ -316,10 +316,16 @@
   var levelManager = {
     paused: false,
     levelStats: [],
+
+    totalStart: -1,
     totalTime: 0,
+    totalElapsed: 0,
+
+    currentStart: -1,
+    currentTime: 0,
+    currentElapsed: 0,
     // Level specific variables
     currentLevel: 0,
-    currentTime: 0,
     currentMoves: 0,
     currentResets: 0,
     completedNodeGroups: 0,
@@ -355,6 +361,14 @@
           block.groups.push('b-' + levelManager.colors[index]);
         }
       });
+
+      if (this.totalStart === -1) {
+        this.totalStart = new Date().getTime();
+        window.setTimeout(levelManager.globalTimerInstance, 100);
+      }
+
+      this.currentStart = new Date().getTime();
+      window.setTimeout(levelManager.levelTimerInstance, 100);
 
       $canvas.drawLayers();
     },
@@ -398,7 +412,7 @@
           if (levelManager.finishedLevel) {
             var stats = 'Level #' + (levelManager.currentLevel + 1) + ': ';
             stats += levelManager.currentMoves + ' ';
-            stats += levelManager.currentResets + ' ' + levelManager.currentTime;
+            stats += levelManager.currentResets + ' ' + levelManager.currentElapsed;
 
             levelManager.levelStats.push(stats);
 
@@ -462,6 +476,34 @@
       } else {
         this.currentLevel = 0;
         return false;
+      }
+    },
+
+    globalTimerInstance: function() {
+      levelManager.totalTime += 100;
+
+      levelManager.totalElapsed = Math.floor(levelManager.totalTime / 100) / 10;
+      if(Math.round(levelManager.totalElapsed) == levelManager.totalElapsed) { levelManager.totalElapsed += '.0'; }
+
+      var diff = (new Date().getTime() - levelManager.totalStart) - levelManager.totalTime;
+      window.setTimeout(levelManager.globalTimerInstance, (100 - diff));
+    },
+
+    levelTimerInstance: function() {
+      levelManager.currentTime += 100;
+
+      levelManager.currentElapsed = Math.floor(levelManager.currentTime / 100) / 10;
+      if(Math.round(levelManager.currentElapsed) == levelManager.currentElapsed) {
+        levelManager.currentElapsed += '.00';
+      } else {
+        levelManager.currentElapsed += '0';
+      }
+
+      UIManager.updateTime();
+
+      var diff = (new Date().getTime() - levelManager.currentStart) - levelManager.currentTime;
+      if (!levelManager.finishedLevel) {
+        window.setTimeout(levelManager.levelTimerInstance, (100 - diff));
       }
     }
   };
