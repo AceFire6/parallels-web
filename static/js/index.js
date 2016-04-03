@@ -126,6 +126,9 @@
           canvasManager.resetPath(layer.data.color);
         }
       } else if (!canvasManager.selectedNodeColor) { // A line is not already being drawn
+        levelManager.currentMoves += 1;
+        UIManager.updateMoves();
+
         var nodeGroup = $canvas.getLayerGroup('node-' + layer.data.color);
         var completed = nodeGroup.filter(function (node) {
           return node.data.used === true;
