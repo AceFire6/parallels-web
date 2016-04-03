@@ -151,6 +151,11 @@
       $canvas.drawLayers();
     },
 
+    nodeBlockClick: function(layer) {
+      var node = $canvas.getLayer(layer.name.replace('block', 'node'));
+      canvasManager.nodeClick(node);
+    },
+
     resetBlock: function(block, full) {
       if ((typeof block) === 'string') {
         block = $canvas.getLayer(block);
@@ -166,6 +171,7 @@
         if (full) {
           block.data.nodeBlock = false;
         } else {
+          block.click = canvasManager.nodeBlockClick;
           groups = block.groups;
         }
       }
@@ -343,6 +349,7 @@
           var y = nodes[i][1];
           canvasManager.drawCircle(x, y, 25, levelManager.colors[index], 'node-' + (y - 60) + (x - 60), ['nodes', 'board', 'node-' + levelManager.colors[index]]);
           var block = $canvas.getLayer('block-' + (y - 60) + (x - 60));
+          block.click = canvasManager.nodeBlockClick;
           block.data.nodeBlock = true;
           block.data.nodeBlockColor = levelManager.colors[index];
           block.groups.push('b-' + levelManager.colors[index]);
