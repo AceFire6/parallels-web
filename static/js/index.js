@@ -32,7 +32,7 @@
 
   var UIManager = {
     updateLevelLabel: function() {
-      $('#level-name').find('.value').text(levelManager.currentLevel);
+      $('#level-name').find('.value').text(levelManager.currentLevel + 1);
     },
 
     updateMoves: function () {
@@ -151,7 +151,7 @@
       $canvas.drawLayers();
     },
 
-    resetBlock: function(block) {
+    resetBlock: function(block, full) {
       if ((typeof block) === 'string') {
         block = $canvas.getLayer(block);
       }
@@ -163,7 +163,11 @@
       block.data.color = '#000';
       var groups =['blocks', 'board'];
       if (block.data.nodeBlock) {
-        groups = block.groups;
+        if (full) {
+          block.data.nodeBlock = false;
+        } else {
+          groups = block.groups;
+        }
       }
       block.groups = groups;
       block.data.lightColor = LightenDarkenColor('#000', 60);
@@ -306,10 +310,12 @@
   var levelManager = {
     paused: false,
     levelStats: [],
+    totalTime: 0,
     // Level specific variables
     currentLevel: 0,
     currentTime: 0,
     currentMoves: 0,
+    currentResets: 0,
     completedNodeGroups: 0,
     totalLevelNodeGroups: 0,
     finishedLevel: false,
@@ -318,8 +324,10 @@
 
     setupLevel: function() {
       $canvas.removeLayerGroup('nodes');
+      $canvas.setLayerGroup('win-screen', {visible: false});
+      this.resetLevel(true);
 
-      this.currentLevel = 0;
+      this.currentResets = 0;
       this.currentTime = 0;
       this.currentMoves = 0;
       this.completedNodeGroups = 0;
@@ -377,11 +385,56 @@
       opts.fontSize = 35;
       opts.y += 60;
       $canvas.drawText(opts);
+
+      $(document).keydown(function(event) {
+        if (event.keyCode === 13) { // Enter was pressed
+          if (levelManager.finishedLevel) {
+            var stats = 'Level #' + (levelManager.currentLevel + 1) + ': ';
+            stats += levelManager.currentMoves + ' ';
+            stats += levelManager.currentResets + ' ' + levelManager.currentTime;
+
+            levelManager.levelStats.push(stats);
+
+            if (levelManager.nextLevel()) { // Go to Next level
+              UIManager.updateLevelLabel();
+              levelManager.setupLevel();
+              UIManager.updateMoves();
+              UIManager.updateTime();
+            } else { // Experiment Finished. Go to questionnaire
+              // TODO: Add questionnaire.
+            }
+          }
+        }
+      });
+    },
+
+    setupResetKey: function() {
+      $(document).keydown(function(event) {
+        if (event.keyCode === 82 && !levelManager.finishedLevel) { // R button was pressed
+          levelManager.resetLevel(false);
+          levelManager.currentMoves += 1;
+          UIManager.updateMoves();
+        }
+      });
+    },
+
+    resetLevel: function(full) {
+      $canvas.getLayerGroup('blocks').forEach(function(block) {
+        canvasManager.resetBlock(block, full);
+      });
+
+      if (!full) {
+        $canvas.getLayerGroup('nodes').forEach(function(node) {
+          node.data.used = false;
+        });
+        levelManager.currentResets += 1;
+      }
+
+      $canvas.drawLayers();
     },
 
     nodeComplete: function() {
       this.completedNodeGroups += 1;
-      console.log(this.completedNodeGroups + ' ' + this.totalLevelNodeGroups);
       this.finishedLevel = this.completedNodeGroups === this.totalLevelNodeGroups;
 
       if (this.finishedLevel) {
@@ -392,16 +445,15 @@
 
     nodeReset: function() {
       this.completedNodeGroups -= 1;
-      console.log(this.completedNodeGroups);
     },
 
     nextLevel: function() {
       if (this.currentLevel + 1 !== levels.length) {
         this.currentLevel += 1;
-        return True;
+        return true;
       } else {
         this.currentLevel = 0;
-        return False;
+        return false;
       }
     }
   };
@@ -416,8 +468,8 @@
     }
 
     levelManager.setupLevel();
-
     levelManager.setupWinScreen();
+    levelManager.setupResetKey();
 
     $canvas.drawLayers();
 
