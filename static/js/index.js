@@ -88,8 +88,8 @@
         var nodeBlock = $canvas.getLayer(layer.name.replace('node', 'block'));
         if (nodeBlock.click !== undefined) {
           canvasManager.blockClick(nodeBlock);
+          layer.data.used = true;
         }
-        layer.data.used = true;
       } else if (!canvasManager.selectedNodeColor) { // A line is not already being drawn
         var nodeGroup = $canvas.getLayerGroup('node-' + layer.data.color);
         var completed = nodeGroup.filter(function (node) {
