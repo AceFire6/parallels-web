@@ -126,6 +126,7 @@
         });
 
         if (completed.length === 2) {
+          levelManager.nodeReset();
           canvasManager.resetPath(layer.data.color);
           return;
         }
@@ -222,6 +223,8 @@
           canvasManager.selectedBlock = '';
           canvasManager.selectedNodeColor = '';
 
+          levelManager.nodeComplete();
+
           $canvas.drawLayers();
           return;
         }
@@ -300,9 +303,12 @@
   var levelManager = {
     paused: false,
     levelStats: [],
+    // Level specific variables
     currentLevel: 0,
     currentTime: 0,
     currentMoves: 0,
+    completedNodeGroups: 0,
+    totalLevelNodeGroups: 0,
     finishedLevel: false,
     // Red, Blue, Green, Purple, Orange
     colors: ['#ff2323', '#3585e8', '#11c157', '#ed45c6', '#d35400'],
@@ -310,7 +316,15 @@
     setupLevel: function() {
       $canvas.removeLayerGroup('nodes');
 
+      this.currentLevel = 0;
+      this.currentTime = 0;
+      this.currentMoves = 0;
+      this.completedNodeGroups = 0;
+      this.finishedLevel = false;
+
       var levelData = levels[this.currentLevel];
+
+      this.totalLevelNodeGroups = levelData.length;
       
       levelData.forEach(function(nodes, index) {
         for (var i=0; i < nodes.length; i++) {
@@ -325,6 +339,57 @@
       });
 
       $canvas.drawLayers();
+    },
+
+    setupWinScreen: function() {
+      var opts = {
+        fillStyle: '#000',
+        layer: true,
+        visible: false,
+        groups: ['board', 'win-screen'],
+        x: 300, y: 300,
+        fontSize: 80,
+        fontFamily: 'Monsterrat-Bold, sans-serif'
+      };
+
+      // Background
+      $canvas.drawRect({
+        fillStyle: 'rgba(233, 233, 233, 0.8)',
+        x: 0, y: 250,
+        width: 600, height: 150,
+        fromCenter: false,
+        layer: true,
+        visible: false,
+        groups: ['board', 'win-screen']
+      });
+
+      // Win Message
+      opts.name = 'win-text-a';
+      opts.text = 'YOU DID IT!';
+      $canvas.drawText(opts);
+
+      // Continue
+      opts.name = 'win-text-b';
+      opts.text = 'Press `Enter` to continue.';
+      opts.fontSize = 35;
+      opts.y += 60;
+      $canvas.drawText(opts);
+    },
+
+    nodeComplete: function() {
+      this.completedNodeGroups += 1;
+      console.log(this.completedNodeGroups + ' ' + this.totalLevelNodeGroups);
+      this.finishedLevel = this.completedNodeGroups === this.totalLevelNodeGroups;
+
+      if (this.finishedLevel) {
+        $canvas.setLayerGroup('nodes', {click: undefined});
+        $canvas.setLayerGroup('win-screen', {visible: true});
+      }
+    },
+
+    nodeReset: function() {
+      this.completedNodeGroups -= 1;
+      console.log(this.completedNodeGroups);
     },
 
     nextLevel: function() {
@@ -348,6 +413,8 @@
     }
 
     levelManager.setupLevel();
+
+    levelManager.setupWinScreen();
 
     $canvas.drawLayers();
 
