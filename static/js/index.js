@@ -373,7 +373,7 @@
 
       // Continue
       opts.name = 'win-text-b';
-      opts.text = 'Press `Enter` to continue.';
+      opts.text = 'Press \'Enter\' to continue.';
       opts.fontSize = 35;
       opts.y += 60;
       $canvas.drawText(opts);
