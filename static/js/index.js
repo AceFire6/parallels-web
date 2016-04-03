@@ -189,6 +189,9 @@
         canvasManager.resetBlock(canvasManager.selectedBlock);
       }
 
+      levelManager.currentMoves += 1;
+      UIManager.updateMoves();
+
       layer.fillStyle = canvasManager.selectedNodeColor;
       layer.data.color = canvasManager.selectedNodeColor;
       layer.data.lightColor = LightenDarkenColor(canvasManager.selectedNodeColor, 60);
