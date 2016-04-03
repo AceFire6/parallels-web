@@ -45,6 +45,7 @@
   };
 
   var canvasManager = {
+    startNode: '',
     selectedNodeColor: '',
     selectedBlock: '',
     possibleMoves: [],
@@ -83,12 +84,40 @@
       });
     },
 
+    resetPath: function(color) {
+      var nodeGroup = $canvas.getLayerGroup('node-' + color);
+      var pathBlocks = $canvas.getLayerGroup('blocks');
+      pathBlocks.forEach(function(block) {
+        if ($.inArray('b-' + color, block.groups) !== -1) {
+          canvasManager.resetBlock(block);
+        }
+      });
+      nodeGroup.forEach(function(node) {
+        node.data.used = false;
+      });
+
+      if (canvasManager.possibleMoves) {
+        canvasManager.possibleMoves.forEach(function(move) {
+          canvasManager.resetBlock(move);
+        });
+      }
+
+      canvasManager.possibleMoves = [];
+      canvasManager.startNode = '';
+      canvasManager.selectedBlock = '';
+      canvasManager.selectedNodeColor = '';
+    },
+
     nodeClick: function(layer) {
       if (canvasManager.selectedNodeColor === layer.data.color) {
         var nodeBlock = $canvas.getLayer(layer.name.replace('node', 'block'));
         if (nodeBlock.click !== undefined) {
           canvasManager.blockClick(nodeBlock);
           layer.data.used = true;
+        }
+
+        if (layer.name === canvasManager.startNode) {
+          canvasManager.resetPath(layer.data.color);
         }
       } else if (!canvasManager.selectedNodeColor) { // A line is not already being drawn
         var nodeGroup = $canvas.getLayerGroup('node-' + layer.data.color);
@@ -97,19 +126,11 @@
         });
 
         if (completed.length === 2) {
-          var pathBlocks = $canvas.getLayerGroup('blocks');
-          pathBlocks.forEach(function(block) {
-            if ($.inArray('b-' + layer.data.color, block.groups) !== -1) {
-              canvasManager.resetBlock(block);
-            }
-          });
-          nodeGroup.forEach(function(node) {
-            node.data.used = false;
-          });
-
+          canvasManager.resetPath(layer.data.color);
           return;
         }
 
+        canvasManager.startNode = layer.name;
         canvasManager.selectedNodeColor = layer.data.color;
         layer.data.used = true;
 
@@ -197,6 +218,7 @@
           canvasManager.setBlock(layer);
           node.data.used = true;
           canvasManager.possibleMoves = [];
+          canvasManager.startNode = '';
           canvasManager.selectedBlock = '';
           canvasManager.selectedNodeColor = '';
 
