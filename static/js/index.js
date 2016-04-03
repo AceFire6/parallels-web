@@ -106,6 +106,8 @@
           nodeGroup.forEach(function(node) {
             node.data.used = false;
           });
+
+          return;
         }
 
         canvasManager.selectedNodeColor = layer.data.color;
