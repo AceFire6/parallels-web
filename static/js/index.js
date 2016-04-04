@@ -481,7 +481,7 @@
     },
 
     nextLevel: function() {
-      if (this.currentLevel + 1 !== levels.length) {
+      if (this.currentLevel + 1 < levels.length) {
         this.currentLevel += 1;
         return true;
       } else {
@@ -494,6 +494,13 @@
       levelManager.totalTime += 100;
 
       levelManager.totalElapsed = Math.floor(levelManager.totalTime / 100) / 10;
+
+      if (levelManager.totalElapsed >= 300) {
+        levelManager.current = levels.length;
+        console.log('TIMES UP!');
+        return;
+      }
+
       if(Math.round(levelManager.totalElapsed) == levelManager.totalElapsed) { levelManager.totalElapsed += '.0'; }
 
       var diff = (new Date().getTime() - levelManager.totalStart) - levelManager.totalTime;
