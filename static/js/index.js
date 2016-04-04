@@ -117,7 +117,7 @@
     nodeClick: function(layer) {
       if (canvasManager.selectedNodeColor === layer.data.color) {
         var nodeBlock = $canvas.getLayer(layer.name.replace('node', 'block'));
-        if (nodeBlock.click !== undefined) {
+        if (nodeBlock.click !== canvasManager.nodeBlockClick) {
           canvasManager.blockClick(nodeBlock);
           layer.data.used = true;
         }
