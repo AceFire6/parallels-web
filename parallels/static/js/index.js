@@ -432,8 +432,10 @@
               levelManager.setupLevel();
               UIManager.updateMoves();
               UIManager.updateTime();
+              $canvas.drawLayers();
             } else { // Experiment Finished. Go to questionnaire
-              // TODO: Add questionnaire.
+              $('#game-container').addClass('hidden');
+              $('#questions').removeClass('hidden');
             }
           }
         }
@@ -495,7 +497,7 @@
 
       levelManager.totalElapsed = Math.floor(levelManager.totalTime / 100) / 10;
 
-      if (levelManager.totalElapsed >= 300) {
+      if (levelManager.totalElapsed >= 10) {
         levelManager.currentLevel = levels.length;
         console.log('TIMES UP!');
         return;
@@ -543,5 +545,23 @@
 
   };
 
-  $(document).ready(setupCanvas);
+  $(document).ready(function() {
+    setupCanvas();
+    $('#get-results').click(function() {
+      var $questions = $('#questions');
+      var levelContent = $('#levels').find('.content');
+      levelManager.levelStats.forEach(function(level) {
+        levelContent.append('<li>'+ level +'</li>');
+      });
+
+      var $answers = $questions.find('.answer');
+      var answerContent = $('#answers').find('.content');
+      $answers.each(function(index, answer) {
+        answerContent.append('<li>'+ $(answer).val() +'</li>');
+      });
+
+      $questions.toggle();
+      $('#results').toggle();
+    });
+  });
 })(jQuery);

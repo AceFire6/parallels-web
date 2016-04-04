@@ -30,13 +30,13 @@
 * {
   margin: 0;
   padding: 0;
-  color: @textColor;
 }
 
 // CSS
 html, body {
   height: 100%;
   background-color: darken(@baseColor, 25%);
+  color: @textColor;
   font-family: "Monsterrat", Arial, sans-serif;
 }
 
@@ -69,6 +69,10 @@ html, body {
   main {
     padding: 0 10px 50px 10px;
 
+    .hidden {
+      display: none;
+    }
+
     #game-container {
       .Block-Center(600px);
       margin-top: 2%;
@@ -95,10 +99,42 @@ html, body {
           width: 150px;
           text-align: left;
         }
+      }
+    }
 
-        .hidden {
-          display: none;
-        }
+    #questions {
+      .Block-Center(85%);
+
+      .content {
+        margin-top: 30px;
+      }
+
+      h4 {
+        padding-bottom: 10px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 10px;
+      }
+
+      select {
+        float: right;
+        color: #000;
+      }
+    }
+
+    #results {
+      #levels {
+        margin-left: 5%;
+      }
+
+      #levels {
+        margin-left: 5%;
+      }
+
+      #answers {
+        margin-left: 5%;
       }
     }
   }

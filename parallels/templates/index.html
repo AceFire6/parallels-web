@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Path Finder</title>
+    <link rel="icon" href="/static/img/path-finder-logo.png">
+
+    <!-- CSS -->
+    <link rel="stylesheet/less" type="text/css" href="/static/css/index.less" />
+    <!-- End CSS -->
+</head>
+<body>
+    <div id="content-container">
+        <header>
+            <img src="/static/img/path-finder-logo.png" />
+            <h1>Path Finder</h1>
+        </header>
+
+        <main>
+            <section id="game-container">
+                <h2 id="level-name">Level <span class="value">1</span></h2>
+                <canvas width="600" height="600" id="game-canvas">Your browser does not support HTML5.</canvas>
+                <div id="score-container">
+                    <div class="moves">Moves: <span class="value">0</span></div>
+                    <div class="time"><!--"time hidden"-->Time: <span class="value">00:00</span></div>
+                </div>
+            </section>
+            <section id="questions" class="hidden">
+                <h1>Thank you for playing the game!</h1>
+                <h3>Please fill out this quick questionnaire.</h3>
+                <div class="content">
+                    <h4>During the events of the game</h4>
+                    <label>1. I felt I was competent enough to meet the demands of the situation.
+                        <select class="answer">
+                            <option>1 - Strongly Disagree</option>
+                            <option>2 - Disagree</option>
+                            <option>3 - Neither Agree nor Disagree</option>
+                            <option>4 - Agree</option>
+                            <option>5 - Strongly Agree</option>
+                        </select>
+                    </label>
+                    <label>2. I did things spontaneously and automatically without having to think.
+                        <select class="answer">
+                            <option>1 - Strongly Disagree</option>
+                            <option>2 - Disagree</option>
+                            <option>3 - Neither Agree nor Disagree</option>
+                            <option>4 - Agree</option>
+                            <option>5 - Strongly Agree</option>
+                        </select>
+                    </label>
+                    <label>3. I had a strong sense of what I wanted to do.
+                        <select class="answer">
+                            <option>1 - Strongly Disagree</option>
+                            <option>2 - Disagree</option>
+                            <option>3 - Neither Agree nor Disagree</option>
+                            <option>4 - Agree</option>
+                            <option>5 - Strongly Agree</option>
+                        </select>
+                    </label>
+                    <label>4. I had a good idea about how well I was doing while I was involved in the task/activity.
+                        <select class="answer">
+                            <option>1 - Strongly Disagree</option>
+                            <option>2 - Disagree</option>
+                            <option>3 - Neither Agree nor Disagree</option>
+                            <option>4 - Agree</option>
+                            <option>5 - Strongly Agree</option>
+                        </select>
+                    </label>
+                    <label>5. I was completely focused on the task at hand.
+                        <select class="answer">
+                            <option>1 - Strongly Disagree</option>
+                            <option>2 - Disagree</option>
+                            <option>3 - Neither Agree nor Disagree</option>
+                            <option>4 - Agree</option>
+                            <option>5 - Strongly Agree</option>
+                        </select>
+                    </label>
+                    <label>6. I had a feeling of total control over what I was doing.
+                        <select class="answer">
+                            <option>1 - Strongly Disagree</option>
+                            <option>2 - Disagree</option>
+                            <option>3 - Neither Agree nor Disagree</option>
+                            <option>4 - Agree</option>
+                            <option>5 - Strongly Agree</option>
+                        </select>
+                    </label>
+                    <label>7. I was not worried about what others may have been thinking of me.
+                        <select class="answer">
+                            <option>1 - Strongly Disagree</option>
+                            <option>2 - Disagree</option>
+                            <option>3 - Neither Agree nor Disagree</option>
+                            <option>4 - Agree</option>
+                            <option>5 - Strongly Agree</option>
+                        </select>
+                    </label>
+                    <label>8. The way time passed seemed to be different from normal.
+                        <select class="answer">
+                            <option>1 - Strongly Disagree</option>
+                            <option>2 - Disagree</option>
+                            <option>3 - Neither Agree nor Disagree</option>
+                            <option>4 - Agree</option>
+                            <option>5 - Strongly Agree</option>
+                        </select>
+                    </label>
+                    <label>9. I found the experience extremely rewarding.
+                        <select class="answer">
+                            <option>1 - Strongly Disagree</option>
+                            <option>2 - Disagree</option>
+                            <option>3 - Neither Agree nor Disagree</option>
+                            <option>4 - Agree</option>
+                            <option>5 - Strongly Agree</option>
+                        </select>
+                    </label>
+                    <button type="button" id="get-results">Submit</button>
+                </div>
+            </section>
+            <section id="results" class="hidden">
+                <div id="levels">
+                    <h1>Levels</h1>
+                    <ol class="content"></ol>
+                </div>
+                <div id="answers">
+                    <h1>Questionnaire</h1>
+                    <ol class="content">
+                    </ol>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            Made by: Jethro Muller
+        </footer>
+    </div>
+
+    <!-- Javascript -->
+    <script src="/static/js/vendor/less.js"></script>
+    <script src="/static/js/vendor/jquery-2.2.2.min.js"></script>
+    <script src="/static/js/vendor/jcanvas.min.js"></script>
+    <script src="/static/js/levels.js"></script>
+    <script src="/static/js/index.js"></script>
+    <!-- End Javascript -->
+</body>
+</html>
