@@ -496,7 +496,7 @@
       levelManager.totalElapsed = Math.floor(levelManager.totalTime / 100) / 10;
 
       if (levelManager.totalElapsed >= 300) {
-        levelManager.current = levels.length;
+        levelManager.currentLevel = levels.length;
         console.log('TIMES UP!');
         return;
       }
